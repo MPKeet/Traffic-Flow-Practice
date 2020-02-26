@@ -1,0 +1,24 @@
+
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+#Import the dataset
+
+df=pd.read_csv('/Users/maxwellkeeter/Desktop/CompSci Resources/KCCountTest.csv')
+
+#Scatter plot to find a linear relationship
+
+df.plot(x='RESTS', y='VEH_VALUE', style='o')
+plt.title('Restaurants vs Vehicle Count')
+plt.xlabel('Restaurants')
+plt.ylabel('Vehicle Count')
+plt.show()
+
+#plot to observe frequency of restaurant counts within radius
+
+plt.figure(figsize=(15,10))
+plt.tight_layout()
+sns.distplot(df['RESTS'])
