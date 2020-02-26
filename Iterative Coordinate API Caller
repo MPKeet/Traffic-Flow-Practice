@@ -1,0 +1,63 @@
+
+
+import pandas as pd
+import requests
+import json
+
+
+#reads the csv file containing intersection coords, traffic counts, and other data
+
+df=pd.read_csv('/Users/maxwellkeeter/Desktop/CompSci Resources/Business Viabilty Project/Data/KCCount.csv')
+
+#creates empty list for api info
+
+rcount=[]
+
+#looper for gathering lat/lng from csv and passing to yelp api
+
+def test_loc(df):
+    for i, row in df.iterrows():
+        if row['Status'] == 'Warranted':
+            LAT=row['LAT']
+            LNG=row['LNG']
+            Restauranter(LAT, LNG)
+        else:
+            print('NOVAL')
+            total=0
+            rcount.append(str(total))
+            
+
+#counts total restaurants in a radius and returns total as a variable
+
+def Restauranter(LAT, LNG):
+    
+
+
+    radius= 300
+
+
+    api_key='ZN_QNlmxkFc-PilRlehJi54cPwnVUI6FgVdAOXdyPZ_Cj7MRRgDHUIcmUwLMwhX0UY8IcgRGhhYrIQL62IpF_MZ_7D2jIji1egG2htWi7Jiaxf8uQI-SB_S8e0hMXnYx'
+    headers={'Authorization': 'Bearer %s' % (api_key)}
+
+
+    url='https://api.yelp.com/v3/businesses/search?latitude=%s&longitude=%s&radius=%s&term=restaurant' % (LAT,LNG,radius)
+
+    results=requests.get(url, headers=headers)
+    results=results.json()
+    try:
+        answer=results['businesses'][0]
+        total=results.get('total')
+        rcount.append(str(total))
+    except (IndexError):
+        total=0
+        rcount.append(str(total))
+
+#creates a dataframe from the rcount list
+
+df=pd.DataFrame(rcount)
+
+#writes data to a new csv file
+
+df.to_csv(r'/Users/maxwellkeeter/Desktop/CompSci Resources/Traffic Learner/traflearner.csv')
+
+#test_loc(df)
