@@ -1,0 +1,51 @@
+
+
+import pandas as pd
+import requests
+import json
+
+
+df=pd.read_csv('/Users/maxwellkeeter/Desktop/CompSci Resources/Business Viabilty Project/Data/KCCount.csv')
+
+rcount=[]
+
+def test_loc(df):
+    for i, row in df.iterrows():
+        if row['Status'] == 'Warranted':
+            LAT=row['LAT']
+            LNG=row['LNG']
+            Restauranter(LAT, LNG)
+        else:
+            print('NOVAL')
+            total=0
+            rcount.append(str(total))
+            
+
+def Restauranter(LAT, LNG):
+    
+
+
+    radius= 300
+
+
+    api_key='API_KEY_HERE'
+    headers={'Authorization': 'Bearer %s' % (api_key)}
+
+
+    url='https://api.yelp.com/v3/businesses/search?latitude=%s&longitude=%s&radius=%s&term=restaurant' % (LAT,LNG,radius)
+
+    results=requests.get(url, headers=headers)
+    results=results.json()
+    try:
+        answer=results['businesses'][0]
+        total=results.get('total')
+        rcount.append(str(total))
+    except (IndexError):
+        total=0
+        rcount.append(str(total))
+            
+df=pd.DataFrame(rcount)
+
+df.to_csv(r'/Users/maxwellkeeter/Desktop/CompSci Resources/Traffic Learner/traflearner.csv')
+
+#test_loc(df)
